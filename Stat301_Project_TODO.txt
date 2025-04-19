@@ -1,0 +1,58 @@
+
+STAT 301 Project - TODO
+=================================
+
+ Dataset & Hypotheses
+-----------------------------------
+[ ] Identify and select a dataset appropriate for ANOVA
+[ ] Clean the dataset (remove missing or irrelevant values)
+[ ] Choose at least two research questions that can be answered with ANOVA
+[ ] Select appropriate variables for each question
+[ ] Formulate null and alternative hypotheses for each question
+
+Data Analysis (Methods Section)
+-----------------------------------
+[ ] Select the correct ANOVA method(s) (one-way, two-way, etc.)
+[ ] Justify why the selected ANOVA method is appropriate
+[ ] Process and clean data as needed
+[ ] Run ANOVA tests in R or another statistical tool
+[ ] Record all test statistics and p-values
+
+
+Report Writing
+===================
+Introduction
+------------
+[ ] Introduce the dataset and its source
+[ ] Clearly state the research questions
+[ ] Describe selected variables and their types
+[ ] State the null and alternative hypotheses
+
+Methods
+-------
+[ ] Describe the ANOVA method(s) used
+[ ] Justify the method choice for each question
+[ ] Explain any data preprocessing steps taken
+
+Conclusion
+----------
+[ ] Report test statistics and p-values
+[ ] Draw conclusions using a significance level of 0.05
+[ ] Interpret findings in the context of the research questions
+[ ] Highlight the most interesting finding
+[ ] Mention limitations of your analysis
+
+-----------------------------------
+Formatting & Submission
+-----------------------------------
+[ ] Report is 2–6 pages long, double spaced
+[ ] Figures and tables are clearly labeled
+[ ] Proofread for grammar, clarity, and flow
+[ ] Paper includes title and all required sections
+[ ] Submit to D2L by Monday, April 28 at 11:59pm
+
+-----------------------------------
+GitHub Upload
+-----------------------------------
+[ ] Each student has a GitHub account
+[ ] Final project report is uploaded to your GitHub repository
