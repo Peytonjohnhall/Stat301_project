@@ -1,0 +1,89 @@
+---
+title: "Stat301_Project"
+author: "Sasha Johnson"
+date: "2025-04-18"S
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Import Dataset
+```{r Import Dataset}
+library(readxl)
+player_stats <- read_excel("~/Documents/Metro_State/Spring_2025/Stat301/Stat301_project/player_stats.xlsx")
+# View(player_stats)
+```
+
+Clean Dataset
+```{r Clean Dataset}
+library(tidyverse)
+
+# Truncates player positions if they have multiple positions
+# ex: "LW/RW" turns into "LW"
+player_stats$Pos = sub("/.*", "", player_stats$Pos)
+
+#Remove any players that have less than 30 games played
+player_stats = player_stats %>%
+    filter(GP >= 30)
+```
+
+Let SP = Scoring Points
+$H_0: \mu_\text{SPcenter} = \mu_\text{SPlw} = \mu_\text{SPrw} = \mu_\text{SPd}$ 
+vs 
+$H_a: \text{At least 2 mean scoring points differ}$
+Perform One-Way ANOVA
+```{r Perform One-Way ANOVA}
+library(ggplot2)
+library(tidyverse)
+
+# PTS stands for scoring points
+scoring_points_model = aov(PTS~Pos, data = player_stats)
+summary(scoring_points_model)
+
+# Create point graph with error bars
+player_stats %>%
+    group_by(Pos) %>%
+    summarise(mean_pts = mean(PTS),
+              se_pts = sd(PTS)/sqrt(length(PTS)),
+              t_star = qt(1 - 0.05/2, length(PTS) - 1)
+              ) %>%
+    ggplot(aes(x = Pos, y = mean_pts)) +
+    geom_point() +
+    geom_errorbar(aes(ymin = mean_pts - se_pts * t_star,
+                      ymax = mean_pts + se_pts * t_star))
+```
+p-value = <2e-16 (i.e. 0.0000000000000002); f-value = 68.39
+Reject H0; there is evidence to support the claim that at least 2 scoring point 
+means differ.
+
+
+### Second Question
+Two-Way ANOVA
+$H_0: \text{There is no interaction between player age and player position}$
+$H_0: \mu_\text{SPcenter} = \mu_\text{SPlw} = \mu_\text{SPrw} = \mu_\text{SPd}$
+$H_0: \mu_\text{Young} = \mu_\text{Prime} = \mu_\text{Old}$
+vs 
+$H_a: \text{There is an interaction between player age and player position}$
+$H_a: \text{At least mean differs for player age}$
+$H_a: \text{At least mean differs for player psoition}$
+
+
+Perform Two-Way ANOVA
+```{r Perform Two-Way ANOVA}
+# Add column to categorize age into 3 categories
+player_stats$AgeGroup = cut(player_stats$Age,
+                             breaks = c(19, 25, 31, 37),
+                             labels = c("young", "prime", "old"),
+                             right = TRUE)
+
+# We'll have N/A in some AgeGroups - removing them
+player_stats <- subset(player_stats, !is.na(AgeGroup))
+
+age_position_model = aov(PTS ~ Pos + AgeGroup + Pos * AgeGroup, data = player_stats)
+summary(age_position_model)
+TukeyHSD(age_position_model)
+
+```
+
