@@ -24,26 +24,30 @@ library(tidyverse)
 # ex: "LW/RW" turns into "LW"
 player_stats$Pos = sub("/.*", "", player_stats$Pos)
 
-#Remove any players that have less than 30 games played
+# Keep only applicable positions (LW, C, RW, D)
+#Remove any players that have less than 30 games played - for both questions
 player_stats = player_stats %>%
-    filter(GP >= 30)
+    filter(GP > 30) %>%
+    filter(Pos %in% c("LW", "C", "RW", "D"))
 ```
 
-Let SP = Scoring Points
-$H_0: \mu_\text{SPcenter} = \mu_\text{SPlw} = \mu_\text{SPrw} = \mu_\text{SPd}$ 
+$H_0: \mu_\text{CenterPTS} = \mu_\text{LeftWingPTS} = \mu_\text{RightWingPTS} = \mu_\text{DefensemanPTS}$ 
 vs 
 $H_a: \text{At least 2 mean scoring points differ}$
 Perform One-Way ANOVA
 ```{r Perform One-Way ANOVA}
 library(ggplot2)
 library(tidyverse)
+# Select single season for one-way anova
+player_stats_oneway = player_stats %>%
+    filter(Season == 2016)
 
 # PTS stands for scoring points
-scoring_points_model = aov(PTS~Pos, data = player_stats)
+scoring_points_model = aov(PTS~Pos, data = player_stats_oneway)
 summary(scoring_points_model)
 
 # Create point graph with error bars
-player_stats %>%
+player_stats_oneway %>%
     group_by(Pos) %>%
     summarise(mean_pts = mean(PTS),
               se_pts = sd(PTS)/sqrt(length(PTS)),
@@ -54,42 +58,46 @@ player_stats %>%
     geom_errorbar(aes(ymin = mean_pts - se_pts * t_star,
                       ymax = mean_pts + se_pts * t_star)
                   ) +
+    scale_y_continuous(limits = c(0, NA)) +
     labs(x = "Player Position",
-         y = "Average Points")
+         y = "Average Points",
+         title = "Points by Position for the 2016 season")
 ```
-p-value = <2e-16 (i.e. 0.0000000000000002); f-value = 68.39
-Reject H0; there is evidence to support the claim that at least 2 scoring point 
-means differ.
+p-value = <1.15e-09; f-value = 15.4
+Reject H0; there is evidence to support the claim that at least 2 scoring point means differ.
 
 
 ### Second Question
 Two-Way ANOVA
 $H_0: \text{There is no interaction between player age and player position}$
-$H_0: \mu_\text{SPcenter} = \mu_\text{SPlw} = \mu_\text{SPrw} = \mu_\text{SPd}$
+$H_0: \mu_\text{CenterPTS} = \mu_\text{LeftWingPTS} = \mu_\text{RightWingPTS} = \mu_\text{DefensmanPTS}$
 $H_0: \mu_\text{Young} = \mu_\text{Prime} = \mu_\text{Old}$
 vs 
 $H_a: \text{There is an interaction between player age and player position}$
 $H_a: \text{At least mean differs for player age}$
-$H_a: \text{At least mean differs for player psoition}$
-
+$H_a: \text{At least mean differs for player position}$
 
 Perform Two-Way ANOVA
 ```{r Perform Two-Way ANOVA}
+library(tidyverse)
+library(ggplot2)
 # Add column to categorize age into 3 categories
 player_stats$AgeGroup = cut(player_stats$Age,
-                             breaks = c(19, 25, 31, 37),
-                             labels = c("young", "prime", "old"),
-                             right = TRUE)
+                            breaks = c(19, 25, 31, 37),
+                            labels = c("young", "prime", "old"),
+                            right = TRUE)
 
 # We'll have N/A in some AgeGroups - removing them
-player_stats = subset(player_stats, !is.na(AgeGroup))
+player_stats_twoway = subset(player_stats, !is.na(AgeGroup)) %>%
+    filter(Season == 2017)
+# View(player_stats_twoway)
 
-age_position_model = aov(PTS ~ Pos + AgeGroup + Pos * AgeGroup, data = player_stats)
+age_position_model = aov(PTS ~ Pos + AgeGroup + Pos * AgeGroup, data = player_stats_twoway)
 summary(age_position_model)
-TukeyHSD(age_position_model)
+#TukeyHSD(age_position_model)
 
 # graphing
-player_stats %>%
+player_stats_twoway %>%
     group_by(Pos, AgeGroup) %>%
     summarise(mean_pts = mean(PTS),
               se_pts = sd(PTS)/sqrt(length(PTS)),
@@ -111,8 +119,24 @@ player_stats %>%
         ) +
     labs(x = "Position",
          y = "Average Points",
-         title = "Points by Position and Age Group",
+         title = "Points by Position and Age Group for the 2017 season",
          fill = "Age Group")
 
 ```
+              Df Sum Sq Mean Sq F value   Pr(>F)    
+Pos            3  16801    5600  16.489 2.71e-10 ***
+AgeGroup       2   1128     564   1.661    0.191    
+Pos:AgeGroup   6   1219     203   0.598    0.732    
+Residuals    579 196654     340      
 
+Position:
+F-value: 16.489; P-value: 2.71e-10
+Because our p-value is less than 0.05 we reject the null hypothesis and accept the alternative hypothesis.
+
+AgeGroup
+F-value: 1.661; P-value: 0.191
+Because our P-value is greater than 0.05 we fail to reject the null hypothesis
+
+Pos : AgeGroup
+F-value: 0.598; P-value: 0.732
+Because our P-value is greater than 0.05 we fail to reject the null hypothesis
