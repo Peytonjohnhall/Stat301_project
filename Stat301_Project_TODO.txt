@@ -25,43 +25,43 @@ Data Analysis (Methods Section)
 [X] Justify why the selected ANOVA method is appropriate
 [X] Process and clean data as needed
 [X] Run ANOVA tests in R or another statistical tool
-[ ] Record all test statistics and p-values
+[X] Record all test statistics and p-values
 
 
 Report Writing
 ===================
 Introduction
 ------------
-[ ] Introduce the dataset and its source
-[ ] Clearly state the research questions
-[ ] Describe selected variables and their types
-[ ] State the null and alternative hypotheses
+[X] Introduce the dataset and its source
+[X] Clearly state the research questions
+[X] Describe selected variables and their types
+[X] State the null and alternative hypotheses
 
 Methods
 -------
-[ ] Describe the ANOVA method(s) used
-[ ] Justify the method choice for each question
-[ ] Explain any data preprocessing steps taken
+[X] Describe the ANOVA method(s) used
+[X] Justify the method choice for each question
+[X] Explain any data preprocessing steps taken
 
 Conclusion
 ----------
-[ ] Report test statistics and p-values
-[ ] Draw conclusions using a significance level of 0.05
-[ ] Interpret findings in the context of the research questions
-[ ] Highlight the most interesting finding
-[ ] Mention limitations of your analysis
+[X] Report test statistics and p-values
+[X] Draw conclusions using a significance level of 0.05
+[X] Interpret findings in the context of the research questions
+[X] Highlight the most interesting finding
+[X] Mention limitations of your analysis
 
 -----------------------------------
 Formatting & Submission
 -----------------------------------
-[ ] Report is 2–6 pages long, double spaced
-[ ] Figures and tables are clearly labeled
-[ ] Proofread for grammar, clarity, and flow
-[ ] Paper includes title and all required sections
-[ ] Submit to D2L by Monday, April 28 at 11:59pm
+[X] Report is 2–6 pages long, double spaced
+[X] Figures and tables are clearly labeled
+[X] Proofread for grammar, clarity, and flow
+[X] Paper includes title and all required sections
+[X] Submit to D2L by Monday, April 28 at 11:59pm
 
 -----------------------------------
 GitHub Upload
 -----------------------------------
 [X] Each student has a GitHub account
-[ ] Final project report is uploaded to your GitHub repository
+[X] Final project report is uploaded to your GitHub repository
